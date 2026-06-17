@@ -1,18 +1,19 @@
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+void setup()
+{
+    Serial.begin(115200);
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+    Serial.println("================================");
+    Serial.println("SMART HOME ROBOT");
+    Serial.println("Version: v0.0.2");
+    Serial.println("ESP32 Boot Successful");
+    Serial.println("================================");
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-}
+void loop()
+{
+    Serial.println("Robot Running...");
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+    delay(1000);
 }
