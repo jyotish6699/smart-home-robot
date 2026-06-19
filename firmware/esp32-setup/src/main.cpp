@@ -9,12 +9,12 @@ void setup()
 {
     Serial.begin(115200);
     Serial.println("BOOT");
-    Serial.printf("Reset Reason: %d\n", esp_reset_reason());
 
     Serial.println();
     Serial.println("========================");
     Serial.println("SMART HOME ROBOT");
-    Serial.println("Version: v0.0.3");
+    Serial.println("Version: v0.0.4 OTA TEST");
+    Serial.println("OTA Upload Successful");
     Serial.println("========================");
 
     connectWiFi();
