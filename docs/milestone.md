@@ -1,10 +1,7 @@
-## v0.0.4
+Developer Infrastructure
 
-Completed:
-- WiFi connectivity
-- OTA firmware service
-- OTA firmware upload
-- Wireless firmware deployment
-
-Result:
-ESP32 firmware can now be updated over WiFi without USB.
+✓ OTA firmware updates
+✓ Static IP configuration
+✓ Telnet remote logging
+✓ Wireless diagnostics
+✓ Log history replay
