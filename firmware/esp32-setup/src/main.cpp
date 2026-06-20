@@ -3,23 +3,25 @@
 
 #include "wifi_manager.h"
 #include "ota_manager.h"
-#include "esp_system.h"
 #include "logger.h"
 #include "telnet_logger.h"
+#include "motor_driver.h"
 
 unsigned long lastLog = 0;
+unsigned long motorTimer = 0;
+int motorState = 0;
 
 void setup()
 {
     Serial.begin(115200);
-
-    logInfo("[SYSTEM] Booting");
 
     connectWiFi();
 
     initTelnetLogger();
 
     setupOTA();
+
+    setupMotors();
 
     logInfo("[SYSTEM] Boot Complete");
 }
@@ -41,5 +43,43 @@ void loop()
         lastLog = millis();
     }
 
-    delay(10);
+    if (millis() - motorTimer > 4000)
+    {
+        motorTimer = millis();
+
+        switch (motorState)
+        {
+            case 0:
+                logInfo("[TEST] Forward");
+                moveForward();
+                break;
+
+            case 1:
+                logInfo("[TEST] Backward");
+                moveBackward();
+                break;
+
+            case 2:
+                logInfo("[TEST] Left");
+                turnLeft();
+                break;
+
+            case 3:
+                logInfo("[TEST] Right");
+                turnRight();
+                break;
+
+            case 4:
+                logInfo("[TEST] Stop");
+                stopMotors();
+                break;
+        }
+
+        motorState++;
+
+        if (motorState > 4)
+        {
+            motorState = 0;
+        }
+    }
 }
