@@ -1,28 +1,37 @@
 #include <WiFi.h>
+
 #include "wifi_manager.h"
 #include "secrets.h"
+#include "logger.h"
 
 void connectWiFi()
 {
-    Serial.println("connectWiFi() called");
-    Serial.print("Connecting to: ");
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    logInfo("[WIFI] connectWiFi() called");
 
-    Serial.print("Connecting");
+    WiFi.mode(WIFI_STA);
+
+    IPAddress local_IP(10,249,232,50);
+    IPAddress gateway(10,249,232,186);
+    IPAddress subnet(255,255,255,0);
+
+    WiFi.config(local_IP, gateway, subnet);
+
+    logInfo("[WIFI] Connecting to SSID: " + String(WIFI_SSID));
+
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
 
-        Serial.print(".");
-        Serial.print(" Status=");
-        Serial.println(WiFi.status());
+        logInfo(
+            "[WIFI] Status = " +
+            String(WiFi.status())
+        );
     }
 
-    Serial.println();
-    Serial.println("WiFi Connected");
-
-    Serial.print("IP Address: ");
-    Serial.println(WiFi.localIP());
+    logInfo("[WIFI] Connected");
+    logInfo("[WIFI] SSID: " + String(WIFI_SSID));
+    logInfo("[WIFI] IP: " + WiFi.localIP().toString());
+    logInfo("[WIFI] Gateway: " + WiFi.gatewayIP().toString());
 }

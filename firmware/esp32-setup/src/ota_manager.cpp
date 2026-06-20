@@ -1,5 +1,7 @@
 #include <ArduinoOTA.h>
+
 #include "ota_manager.h"
+#include "logger.h"
 
 void setupOTA()
 {
@@ -7,28 +9,42 @@ void setupOTA()
 
     ArduinoOTA.onStart([]()
     {
-        Serial.println("OTA Start");
+        logInfo("[OTA] Start");
     });
 
-    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total)
+    ArduinoOTA.onProgress([](unsigned int progress,
+                             unsigned int total)
     {
-        Serial.printf(
-            "Progress: %u%%\r",
-            (progress * 100) / total
-        );
+        static int lastPercent = -1;
+
+        int percent = (progress * 100) / total;
+
+        if (percent != lastPercent)
+        {
+            lastPercent = percent;
+
+            logInfo(
+                "[OTA] Progress: " +
+                String(percent) +
+                "%"
+            );
+        }
     });
 
     ArduinoOTA.onEnd([]()
     {
-        Serial.println("OTA End");
+        logInfo("[OTA] End");
     });
 
     ArduinoOTA.onError([](ota_error_t error)
     {
-        Serial.printf("OTA Error[%u]\n", error);
+        logInfo(
+            "[OTA] Error: " +
+            String(error)
+        );
     });
 
     ArduinoOTA.begin();
 
-    Serial.println("OTA Ready");
+    logInfo("[OTA] Ready");
 }

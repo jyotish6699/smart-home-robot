@@ -4,27 +4,42 @@
 #include "wifi_manager.h"
 #include "ota_manager.h"
 #include "esp_system.h"
+#include "logger.h"
+#include "telnet_logger.h"
+
+unsigned long lastLog = 0;
 
 void setup()
 {
     Serial.begin(115200);
-    Serial.println("BOOT");
 
-    Serial.println();
-    Serial.println("========================");
-    Serial.println("SMART HOME ROBOT");
-    Serial.println("Version: v0.0.4 OTA TEST");
-    Serial.println("OTA Upload Successful");
-    Serial.println("========================");
+    logInfo("[SYSTEM] Booting");
 
     connectWiFi();
 
+    initTelnetLogger();
+
     setupOTA();
+
+    logInfo("[SYSTEM] Boot Complete");
 }
 
 void loop()
 {
+    handleTelnetLogger();
+
     ArduinoOTA.handle();
+
+    if (millis() - lastLog > 5000)
+    {
+        logInfo(
+            "[SYSTEM] Uptime: " +
+            String(millis() / 1000) +
+            " sec"
+        );
+
+        lastLog = millis();
+    }
 
     delay(10);
 }
