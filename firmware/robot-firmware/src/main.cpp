@@ -6,6 +6,7 @@
 #include "logger.h"
 #include "telnet_logger.h"
 #include "motor_driver.h"
+#include "remote-control.h"
 
 unsigned long lastLog = 0;
 unsigned long motorTimer = 0;
@@ -23,6 +24,8 @@ void setup()
 
     setupMotors();
 
+    setupRemoteControl();
+
     logInfo("[SYSTEM] Boot Complete");
 }
 
@@ -31,6 +34,8 @@ void loop()
     handleTelnetLogger();
 
     ArduinoOTA.handle();
+
+    handleRemoteControl();
 
     if (millis() - lastLog > 5000)
     {
