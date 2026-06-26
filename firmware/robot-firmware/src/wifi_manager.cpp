@@ -10,11 +10,11 @@ void connectWiFi()
 
     WiFi.mode(WIFI_STA);
 
-    IPAddress local_IP(10,249,232,50);
-    IPAddress gateway(10,249,232,186);
-    IPAddress subnet(255,255,255,0);
+    // IPAddress local_IP(10,249,232,50);
+    // IPAddress gateway(10,249,232,186);
+    // IPAddress subnet(255,255,255,0);
 
-    WiFi.config(local_IP, gateway, subnet);
+    // WiFi.config(local_IP, gateway, subnet);
 
     logInfo("[WIFI] Connecting to SSID: " + String(WIFI_SSID));
 
@@ -34,4 +34,5 @@ void connectWiFi()
     logInfo("[WIFI] SSID: " + String(WIFI_SSID));
     logInfo("[WIFI] IP: " + WiFi.localIP().toString());
     logInfo("[WIFI] Gateway: " + WiFi.gatewayIP().toString());
+    logInfo("[WIFI] Subnet: " + WiFi.subnetMask().toString());
 }
