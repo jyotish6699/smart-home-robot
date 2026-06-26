@@ -1,38 +1,82 @@
 #include <WiFi.h>
 
 #include "wifi_manager.h"
-#include "secrets.h"
+#include "wifi_credentials.h"
 #include "logger.h"
 
-void connectWiFi()
+bool connectWiFi()
 {
     logInfo("[WIFI] connectWiFi() called");
 
     WiFi.mode(WIFI_STA);
 
-    // IPAddress local_IP(10,249,232,50);
-    // IPAddress gateway(10,249,232,186);
-    // IPAddress subnet(255,255,255,0);
+    WiFi.disconnect(true);
 
-    // WiFi.config(local_IP, gateway, subnet);
+    delay(500);
 
-    logInfo("[WIFI] Connecting to SSID: " + String(WIFI_SSID));
-
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-
-    while (WiFi.status() != WL_CONNECTED)
+    for (int i = 0; i < KNOWN_WIFI_NETWORK_COUNT; i++)
     {
-        delay(500);
+        logInfo(
+            "[WIFI] Trying: " +
+            String(KNOWN_WIFI_NETWORKS[i].ssid)
+        );
+
+        WiFi.begin(
+            KNOWN_WIFI_NETWORKS[i].ssid,
+            KNOWN_WIFI_NETWORKS[i].password
+        );
+
+        unsigned long startTime = millis();
+
+        while (WiFi.status() != WL_CONNECTED &&
+               millis() - startTime < 10000)
+        {
+            delay(500);
+
+            logInfo(
+                "[WIFI] Status = " +
+                String(WiFi.status())
+            );
+        }
+
+        if (WiFi.status() == WL_CONNECTED)
+        {
+            logInfo("[WIFI] Connected");
+
+            logInfo(
+                "[WIFI] SSID: " +
+                WiFi.SSID()
+            );
+
+            logInfo(
+                "[WIFI] IP: " +
+                WiFi.localIP().toString()
+            );
+
+            logInfo(
+                "[WIFI] Gateway: " +
+                WiFi.gatewayIP().toString()
+            );
+
+            logInfo(
+                "[WIFI] Subnet: " +
+                WiFi.subnetMask().toString()
+            );
+
+            return true;
+        }
 
         logInfo(
-            "[WIFI] Status = " +
-            String(WiFi.status())
+            "[WIFI] Failed: " +
+            String(KNOWN_WIFI_NETWORKS[i].ssid)
         );
+
+        WiFi.disconnect(true);
+
+        delay(500);
     }
 
-    logInfo("[WIFI] Connected");
-    logInfo("[WIFI] SSID: " + String(WIFI_SSID));
-    logInfo("[WIFI] IP: " + WiFi.localIP().toString());
-    logInfo("[WIFI] Gateway: " + WiFi.gatewayIP().toString());
-    logInfo("[WIFI] Subnet: " + WiFi.subnetMask().toString());
+    logInfo("[WIFI] No Known Network Available");
+
+    return false;
 }

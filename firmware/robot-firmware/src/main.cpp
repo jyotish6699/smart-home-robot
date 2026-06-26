@@ -16,7 +16,14 @@ void setup()
 {
     Serial.begin(115200);
 
-    connectWiFi();
+    if (!connectWiFi()) {
+
+        logInfo("[SYSTEM] WiFi Connection Failed");
+
+        while(true) {
+            delay(1000);
+        }
+    }
 
     initTelnetLogger();
 
