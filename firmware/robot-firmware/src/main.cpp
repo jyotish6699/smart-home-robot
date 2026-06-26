@@ -6,22 +6,21 @@
 #include "logger.h"
 #include "telnet_logger.h"
 #include "motor_driver.h"
-#include "remote-control.h"
+#include "remote_control.h"
 #include "mdns_manager.h"
 
 unsigned long lastLog = 0;
-unsigned long motorTimer = 0;
-int motorState = 0;
 
 void setup()
 {
     Serial.begin(115200);
 
-    if (!connectWiFi()) {
-
+    if (!connectWiFi())
+    {
         logInfo("[SYSTEM] WiFi Connection Failed");
 
-        while(true) {
+        while (true)
+        {
             delay(1000);
         }
     }
@@ -59,45 +58,5 @@ void loop()
         );
 
         lastLog = millis();
-    }
-
-    if (millis() - motorTimer > 4000)
-    {
-        motorTimer = millis();
-
-        switch (motorState)
-        {
-            case 0:
-                logInfo("[TEST] Forward");
-                moveForward();
-                break;
-
-            case 1:
-                logInfo("[TEST] Backward");
-                moveBackward();
-                break;
-
-            case 2:
-                logInfo("[TEST] Left");
-                turnLeft();
-                break;
-
-            case 3:
-                logInfo("[TEST] Right");
-                turnRight();
-                break;
-
-            case 4:
-                logInfo("[TEST] Stop");
-                stopMotors();
-                break;
-        }
-
-        motorState++;
-
-        if (motorState > 4)
-        {
-            motorState = 0;
-        }
     }
 }
