@@ -7,6 +7,7 @@
 #include "telnet_logger.h"
 #include "motor_driver.h"
 #include "remote-control.h"
+#include "mdns_manager.h"
 
 unsigned long lastLog = 0;
 unsigned long motorTimer = 0;
@@ -28,6 +29,11 @@ void setup()
     initTelnetLogger();
 
     setupOTA();
+
+    if (!setupMDNS())
+    {
+        logInfo("[SYSTEM] mDNS Startup Failed");
+    }
 
     setupMotors();
 
