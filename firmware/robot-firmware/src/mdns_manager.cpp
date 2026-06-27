@@ -7,7 +7,7 @@ bool setupMDNS()
 {
     logInfo("[MDNS] Starting...");
 
-    if (!MDNS.begin("smart-home-robot"))
+    if (!MDNS.begin("aegis"))
     {
         logInfo("[MDNS] Failed");
 
@@ -21,7 +21,7 @@ bool setupMDNS()
     );
 
     logInfo(
-        "[MDNS] Hostname: smart-home-robot.local"
+        "[MDNS] Hostname: aegis.local"
     );
 
     logInfo(

@@ -5,7 +5,7 @@
 
 void setupOTA()
 {
-    ArduinoOTA.setHostname("smart-home-robot");
+    ArduinoOTA.setHostname("aegis");
 
     ArduinoOTA.onStart([]()
     {

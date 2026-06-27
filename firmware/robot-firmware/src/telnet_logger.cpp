@@ -28,7 +28,7 @@ void handleTelnetLogger()
         {
             telnetClient.println();
             telnetClient.println("========================");
-            telnetClient.println("SMART HOME ROBOT");
+            telnetClient.println("AEGIS");
             telnetClient.println("========================");
 
             telnetClient.println();
