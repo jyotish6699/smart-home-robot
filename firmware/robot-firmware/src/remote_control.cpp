@@ -8,6 +8,7 @@
 #include "remote_control.h"
 #include "motor_driver.h"
 #include "logger.h"
+#include "motion_engine.h"
 
 WebServer server(80);
 
@@ -53,7 +54,7 @@ void handleForward()
 {
     logInfo("[REMOTE] Forward");
 
-    moveForward();
+    motionForward();
 
     server.send(200, "text/plain", "OK");
 }
@@ -62,7 +63,7 @@ void handleBackward()
 {
     logInfo("[REMOTE] Backward");
 
-    moveBackward();
+    motionBackward();
 
     server.send(200, "text/plain", "OK");
 }
@@ -71,7 +72,7 @@ void handleLeft()
 {
     logInfo("[REMOTE] Left");
 
-    turnLeft();
+    motionLeft();
 
     server.send(200, "text/plain", "OK");
 }
@@ -80,7 +81,7 @@ void handleRight()
 {
     logInfo("[REMOTE] Right");
 
-    turnRight();
+    motionRight();
 
     server.send(200, "text/plain", "OK");
 }
@@ -89,7 +90,7 @@ void handleStop()
 {
     logInfo("[REMOTE] Stop");
 
-    stopMotors();
+    motionStop();
 
     server.send(200, "text/plain", "OK");
 }
