@@ -95,6 +95,45 @@ void handleStop()
     server.send(200, "text/plain", "OK");
 }
 
+void handleSpeed()
+{
+    if (!server.hasArg("value"))
+    {
+        server.send(
+            400,
+            "text/plain",
+            "Missing speed value"
+        );
+
+        return;
+    }
+
+    int speed = server.arg("value").toInt();
+
+    if (speed < 0)
+    {
+        speed = 0;
+    }
+
+    if (speed > 255)
+    {
+        speed = 255;
+    }
+
+    setMotionSpeed(speed);
+
+    logInfo(
+        "[REMOTE] Speed Changed: " +
+        String(speed)
+    );
+
+    server.send(
+        200,
+        "text/plain",
+        "OK"
+    );
+}
+
 void handleNotFound()
 {
     if (serveFile(server.uri()))
@@ -138,6 +177,8 @@ void setupRemoteControl()
     server.on("/right", HTTP_GET, handleRight);
 
     server.on("/stop", HTTP_GET, handleStop);
+
+    server.on("/speed", HTTP_GET, handleSpeed);
 
     server.onNotFound(handleNotFound);
 
