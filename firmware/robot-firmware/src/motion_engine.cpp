@@ -1,11 +1,30 @@
 #include "motion_engine.h"
 
-#include "motor_driver.h"
+#include "drive_controller.h"
 #include "logger.h"
 
 void setupMotionEngine()
 {
+    setupDriveController();
+
+    setDriveSpeed(255);
+
     logInfo("[MOTION] Motion Engine Ready");
+}
+
+void setMotionSpeed(uint8_t speed)
+{
+    setDriveSpeed(speed);
+
+    logInfo(
+        "[MOTION] Speed = " +
+        String(speed)
+    );
+}
+
+uint8_t getMotionSpeed()
+{
+    return getDriveSpeed();
 }
 
 void executeMotion(MotionCommand command)
@@ -14,44 +33,44 @@ void executeMotion(MotionCommand command)
     {
         case MOTION_FORWARD:
 
-            moveForward();
+            driveForward();
 
             break;
 
         case MOTION_BACKWARD:
 
-            moveBackward();
+            driveBackward();
 
             break;
 
         case MOTION_LEFT:
 
-            turnLeft();
+            driveLeft();
 
             break;
 
         case MOTION_RIGHT:
 
-            turnRight();
+            driveRight();
 
             break;
 
         case MOTION_SPIN_LEFT:
 
-            turnLeft();
+            driveSpinLeft();
 
             break;
 
         case MOTION_SPIN_RIGHT:
 
-            turnRight();
+            driveSpinRight();
 
             break;
 
         case MOTION_STOP:
         default:
 
-            stopMotors();
+            driveStop();
 
             break;
     }

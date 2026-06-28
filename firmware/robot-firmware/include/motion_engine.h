@@ -1,6 +1,8 @@
 #ifndef MOTION_ENGINE_H
 #define MOTION_ENGINE_H
 
+#include <stdint.h>
+
 enum MotionCommand
 {
     MOTION_STOP,
@@ -18,5 +20,9 @@ enum MotionCommand
 void setupMotionEngine();
 
 void executeMotion(MotionCommand command);
+
+void setMotionSpeed(uint8_t speed);
+
+uint8_t getMotionSpeed();
 
 #endif
