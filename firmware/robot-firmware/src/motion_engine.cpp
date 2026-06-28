@@ -1,4 +1,5 @@
 #include "motion_engine.h"
+
 #include "motor_driver.h"
 #include "logger.h"
 
@@ -7,27 +8,51 @@ void setupMotionEngine()
     logInfo("[MOTION] Motion Engine Ready");
 }
 
-void motionForward()
+void executeMotion(MotionCommand command)
 {
-    moveForward();
-}
+    switch (command)
+    {
+        case MOTION_FORWARD:
 
-void motionBackward()
-{
-    moveBackward();
-}
+            moveForward();
 
-void motionLeft()
-{
-    turnLeft();
-}
+            break;
 
-void motionRight()
-{
-    turnRight();
-}
+        case MOTION_BACKWARD:
 
-void motionStop()
-{
-    stopMotors();
+            moveBackward();
+
+            break;
+
+        case MOTION_LEFT:
+
+            turnLeft();
+
+            break;
+
+        case MOTION_RIGHT:
+
+            turnRight();
+
+            break;
+
+        case MOTION_SPIN_LEFT:
+
+            turnLeft();
+
+            break;
+
+        case MOTION_SPIN_RIGHT:
+
+            turnRight();
+
+            break;
+
+        case MOTION_STOP:
+        default:
+
+            stopMotors();
+
+            break;
+    }
 }

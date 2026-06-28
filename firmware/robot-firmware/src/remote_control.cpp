@@ -54,7 +54,7 @@ void handleForward()
 {
     logInfo("[REMOTE] Forward");
 
-    motionForward();
+    executeMotion(MOTION_FORWARD);
 
     server.send(200, "text/plain", "OK");
 }
@@ -63,7 +63,7 @@ void handleBackward()
 {
     logInfo("[REMOTE] Backward");
 
-    motionBackward();
+    executeMotion(MOTION_BACKWARD);
 
     server.send(200, "text/plain", "OK");
 }
@@ -72,7 +72,7 @@ void handleLeft()
 {
     logInfo("[REMOTE] Left");
 
-    motionLeft();
+    executeMotion(MOTION_LEFT);
 
     server.send(200, "text/plain", "OK");
 }
@@ -81,7 +81,7 @@ void handleRight()
 {
     logInfo("[REMOTE] Right");
 
-    motionRight();
+    executeMotion(MOTION_RIGHT);
 
     server.send(200, "text/plain", "OK");
 }
@@ -90,7 +90,7 @@ void handleStop()
 {
     logInfo("[REMOTE] Stop");
 
-    motionStop();
+    executeMotion(MOTION_STOP);
 
     server.send(200, "text/plain", "OK");
 }
