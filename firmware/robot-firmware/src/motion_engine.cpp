@@ -3,6 +3,7 @@
 #include "drive_controller.h"
 #include "logger.h"
 #include "motion_mixer.h"
+#include "motion_profile.h"
 
 void setupMotionEngine()
 {
@@ -82,6 +83,27 @@ void executeJoystick(
     int16_t throttle
 )
 {
+    MotionProfile profile =
+        getMotionProfile();
+
+    throttle =
+        map(
+            throttle,
+            -255,
+            255,
+            -profile.maxSpeed,
+            profile.maxSpeed
+        );
+
+    steering =
+        map(
+            steering,
+            -255,
+            255,
+            -profile.turnSensitivity,
+            profile.turnSensitivity
+        );
+
     MotionOutput output =
         mixMotion(
             steering,
@@ -94,13 +116,12 @@ void executeJoystick(
     );
 
     logInfo(
-        "[JOYSTICK] S=" +
-        String(steering) +
-        " T=" +
-        String(throttle) +
-        " L=" +
-        String(output.left) +
-        " R=" +
-        String(output.right)
+        "[JOYSTICK] "
+        "P=" + String(getMotionProfileType()) +
+        " T=" + String(throttle) +
+        " S=" + String(steering) +
+        " L=" + String(output.left) +
+        " R=" + String(output.right)
     );
 }
+

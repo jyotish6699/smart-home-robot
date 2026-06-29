@@ -9,6 +9,7 @@
 #include "motor_driver.h"
 #include "logger.h"
 #include "motion_engine.h"
+#include "motion_profile.h"
 
 WebServer server(80);
 
@@ -19,6 +20,7 @@ void handleRight();
 void handleStop();
 void handleSpeed();
 void handleJoystick();
+void handleProfile();
 void handleNotFound();
 
 String getContentType(const String &filename)
@@ -192,6 +194,8 @@ void setupRemoteControl()
 
     server.on("/joystick", HTTP_GET, handleJoystick);
 
+    server.on("/profile", HTTP_GET, handleProfile);
+
     server.onNotFound(handleNotFound);
 
     server.begin();
@@ -226,6 +230,66 @@ void handleJoystick()
     executeJoystick(
         steering,
         throttle
+    );
+
+    server.send(
+        200,
+        "text/plain",
+        "OK"
+    );
+}
+
+
+void handleProfile()
+{
+    if (!server.hasArg("mode"))
+    {
+        server.send(
+            400,
+            "text/plain",
+            "Missing profile"
+        );
+
+        return;
+    }
+
+    String mode =
+        server.arg("mode");
+
+    if (mode == "precision")
+    {
+        setMotionProfile(
+            PROFILE_PRECISION
+        );
+    }
+    else if (mode == "normal")
+    {
+        setMotionProfile(
+            PROFILE_NORMAL
+        );
+    }
+    else if (mode == "sport")
+    {
+        setMotionProfile(
+            PROFILE_SPORT
+        );
+    }
+    else
+    {
+        server.send(
+            400,
+            "text/plain",
+            "Invalid profile"
+        );
+
+        return;
+    }
+
+    MotionProfile profile =
+        getMotionProfile();
+
+    setMotionSpeed(
+        profile.defaultSpeed
     );
 
     server.send(

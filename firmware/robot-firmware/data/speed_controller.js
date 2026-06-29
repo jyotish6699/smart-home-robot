@@ -1,10 +1,28 @@
-const SPEED_PRESET = {
+const PROFILE = {
 
-    PRECISION:80,
+    precision: {
 
-    NORMAL:180,
+        speed: 80,
 
-    SPORT:255
+        name: "precision"
+
+    },
+
+    normal: {
+
+        speed: 180,
+
+        name: "normal"
+
+    },
+
+    sport: {
+
+        speed: 255,
+
+        name: "sport"
+
+    }
 
 };
 
@@ -22,21 +40,81 @@ export function initSpeedController()
 
         text.textContent = value;
 
-        await fetch(`/speed?value=${value}`);
+        try
+        {
+            await fetch(
+                `/speed?value=${value}`
+            );
+        }
+        catch(err)
+        {
+            console.error(err);
+        }
     }
 
-    slider.addEventListener("input", () => {
+    async function changeProfile(profile)
+    {
+        try
+        {
+            await fetch(
+                `/profile?mode=${profile.name}`
+            );
 
-        setSpeed(slider.value);
+            slider.value =
+                profile.speed;
 
-    });
+            text.textContent =
+                profile.speed;
+        }
+        catch(err)
+        {
+            console.error(err);
+        }
+    }
 
-    document.getElementById("precision")
-        .onclick = () => setSpeed(SPEED_PRESET.PRECISION);
+    slider.addEventListener(
+        "input",
+        () =>
+        {
+            setSpeed(
+                slider.value
+            );
+        }
+    );
 
-    document.getElementById("normal")
-        .onclick = () => setSpeed(SPEED_PRESET.NORMAL);
+    document
+        .getElementById("precision")
+        .addEventListener(
+            "click",
+            () =>
+            {
+                changeProfile(
+                    PROFILE.precision
+                );
+            }
+        );
 
-    document.getElementById("sport")
-        .onclick = () => setSpeed(SPEED_PRESET.SPORT);
+    document
+        .getElementById("normal")
+        .addEventListener(
+            "click",
+            () =>
+            {
+                changeProfile(
+                    PROFILE.normal
+                );
+            }
+        );
+
+    document
+        .getElementById("sport")
+        .addEventListener(
+            "click",
+            () =>
+            {
+                changeProfile(
+                    PROFILE.sport
+                );
+            }
+        );
 }
