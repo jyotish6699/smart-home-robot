@@ -225,3 +225,31 @@ button:active
 
     display:none;
 }
+
+.emergency {
+
+    width:100%;
+
+    padding:16px;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    background:#d32f2f;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+}
+
+.emergency:hover {
+
+    background:#b71c1c;
+
+}

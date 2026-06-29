@@ -13,4 +13,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
     initJoystick();
 
+    document
+        .getElementById("emergencyStop")
+        .addEventListener(
+            "click",
+            async () =>
+            {
+                await fetch("/estop");
+            }
+        );
+
 });

@@ -29,6 +29,7 @@ void handleJoystick();
 void handleProfile();
 void handleNotFound();
 void updateCommandTimer();
+void handleEmergencyStop();
 
 String getContentType(const String &filename)
 {
@@ -214,6 +215,12 @@ void setupRemoteControl()
 
     server.on("/stop", HTTP_GET, handleStop);
 
+    server.on(
+        "/estop",
+        HTTP_GET,
+        handleEmergencyStop
+    );
+
     server.on("/speed", HTTP_GET, handleSpeed);
 
     server.on("/joystick", HTTP_GET, handleJoystick);
@@ -337,6 +344,21 @@ void handleProfile()
     setMotionSpeed(
         profile.defaultSpeed
     );
+
+    server.send(
+        200,
+        "text/plain",
+        "OK"
+    );
+}
+
+void handleEmergencyStop()
+{
+    updateCommandTimer();
+
+    logInfo("[SAFETY] Emergency Stop");
+
+    executeMotion(MOTION_STOP);
 
     server.send(
         200,
