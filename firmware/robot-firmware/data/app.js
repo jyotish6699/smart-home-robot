@@ -23,4 +23,27 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         );
 
+    const status =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+    window.addEventListener(
+        "offline",
+        () =>
+        {
+            status.textContent =
+                "🔴 Disconnected";
+        }
+    );
+
+    window.addEventListener(
+        "online",
+        () =>
+        {
+            status.textContent =
+                "🟢 Connected";
+        }
+    );
+
 });
