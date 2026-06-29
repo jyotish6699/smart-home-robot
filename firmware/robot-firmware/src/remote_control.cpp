@@ -12,6 +12,15 @@
 
 WebServer server(80);
 
+void handleForward();
+void handleBackward();
+void handleLeft();
+void handleRight();
+void handleStop();
+void handleSpeed();
+void handleJoystick();
+void handleNotFound();
+
 String getContentType(const String &filename)
 {
     if (filename.endsWith(".html"))
@@ -167,6 +176,7 @@ void setupRemoteControl()
             serveFile("/index.html");
         }
     );
+    
 
     server.on("/forward", HTTP_GET, handleForward);
 
@@ -180,6 +190,8 @@ void setupRemoteControl()
 
     server.on("/speed", HTTP_GET, handleSpeed);
 
+    server.on("/joystick", HTTP_GET, handleJoystick);
+
     server.onNotFound(handleNotFound);
 
     server.begin();
@@ -190,4 +202,35 @@ void setupRemoteControl()
 void handleRemoteControl()
 {
     server.handleClient();
+}
+
+void handleJoystick()
+{
+    if (!server.hasArg("x") || !server.hasArg("y"))
+    {
+        server.send(
+            400,
+            "text/plain",
+            "Missing joystick values"
+        );
+
+        return;
+    }
+
+    int steering = server.arg("x").toInt();
+    int throttle = server.arg("y").toInt();
+
+    steering = constrain(steering, -255, 255);
+    throttle = constrain(throttle, -255, 255);
+
+    executeJoystick(
+        steering,
+        throttle
+    );
+
+    server.send(
+        200,
+        "text/plain",
+        "OK"
+    );
 }

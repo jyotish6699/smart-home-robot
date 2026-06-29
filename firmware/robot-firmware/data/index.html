@@ -21,91 +21,155 @@
 
 <div class="container">
 
-<h1>Aegis</h1>
+    <h1>Aegis</h1>
 
-<p class="status">
+    <p class="status">
 
-Connected
+        Connected
 
-</p>
+    </p>
 
-<div class="controls">
+    <!-- Driving Mode -->
 
-<button id="forward">
+    <div class="card">
 
-▲
+        <h2>Driving Mode</h2>
 
-</button>
+        <div class="mode-selector">
 
-<div class="middle">
+            <button
+                id="buttonMode"
+                class="mode active">
 
-<button id="left">
+                Buttons
 
-◀
+            </button>
 
-</button>
+            <button
+                id="joystickMode"
+                class="mode">
 
-<button id="stop">
+                Joystick
 
-■
+            </button>
 
-</button>
-
-<button id="right">
-
-▶
-
-</button>
-
-</div>
-
-<button id="backward">
-
-▼
-
-</button>
-
-</div>
-
-<div class="card">
-
-    <h2>Speed Control</h2>
-
-    <div class="speed-value">
-
-        <span id="speedText">255</span>
+        </div>
 
     </div>
 
-    <input
-        type="range"
-        id="speedSlider"
-        min="0"
-        max="255"
-        value="255"
-    >
+    <!-- Button Controls -->
+
+    <div
+        id="buttonControls">
+
+        <div class="controls">
+
+            <button id="forward">
+
+                ▲
+
+            </button>
+
+            <div class="middle">
+
+                <button id="left">
+
+                    ◀
+
+                </button>
+
+                <button id="stop">
+
+                    ■
+
+                </button>
+
+                <button id="right">
+
+                    ▶
+
+                </button>
+
+            </div>
+
+            <button id="backward">
+
+                ▼
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Speed -->
+
+    <div class="card">
+
+        <h2>Speed Control</h2>
+
+        <div class="speed-value">
+
+            <span id="speedText">
+
+                255
+
+            </span>
+
+        </div>
+
+        <input
+            type="range"
+            id="speedSlider"
+            min="0"
+            max="255"
+            value="255">
+
+    </div>
+
+    <!-- Speed Presets -->
+
+    <div class="speed-presets">
+
+        <button id="precision">
+
+            🐢 Precision
+
+        </button>
+
+        <button id="normal">
+
+            🚗 Normal
+
+        </button>
+
+        <button id="sport">
+
+            🚀 Sport
+
+        </button>
+
+    </div>
+
+    <!-- Virtual Joystick -->
+
+    <div
+        id="joystickControls"
+        class="card hidden">
+
+        <h2>Virtual Joystick</h2>
+
+        <div id="joystickBase">
+
+            <div id="joystickStick"></div>
+
+        </div>
+
+    </div>
 
 </div>
 
-<div class="speed-presets">
-
-    <button id="precision">
-        🐢 Precision
-    </button>
-
-    <button id="normal">
-        🚗 Normal
-    </button>
-
-    <button id="sport">
-        🚀 Sport
-    </button>
-
-</div>
-
-</div>
-
-<script src="/app.js"></script>
+<script type="module" src="/app.js"></script>
 
 </body>
 

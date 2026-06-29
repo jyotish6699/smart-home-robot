@@ -23,6 +23,11 @@ void executeMotion(MotionCommand command);
 
 void setMotionSpeed(uint8_t speed);
 
+void executeJoystick(
+    int16_t steering,
+    int16_t throttle
+);
+
 uint8_t getMotionSpeed();
 
 #endif

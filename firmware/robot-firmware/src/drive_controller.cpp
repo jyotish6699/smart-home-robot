@@ -108,3 +108,14 @@ void driveStop()
         0
     );
 }
+
+void driveJoystick(
+    int16_t left,
+    int16_t right
+)
+{
+    setMotorOutput(
+        left,
+        right
+    );
+}
