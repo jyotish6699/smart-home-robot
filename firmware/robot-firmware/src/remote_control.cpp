@@ -13,6 +13,12 @@
 
 WebServer server(80);
 
+static unsigned long lastCommandTime = 0;
+
+constexpr unsigned long COMMAND_TIMEOUT = 500;
+
+static bool timeoutTriggered = false;
+
 void handleForward();
 void handleBackward();
 void handleLeft();
@@ -22,6 +28,7 @@ void handleSpeed();
 void handleJoystick();
 void handleProfile();
 void handleNotFound();
+void updateCommandTimer();
 
 String getContentType(const String &filename)
 {
@@ -63,6 +70,8 @@ bool serveFile(String path)
 
 void handleForward()
 {
+    updateCommandTimer();
+
     logInfo("[REMOTE] Forward");
 
     executeMotion(MOTION_FORWARD);
@@ -72,6 +81,8 @@ void handleForward()
 
 void handleBackward()
 {
+    updateCommandTimer();
+
     logInfo("[REMOTE] Backward");
 
     executeMotion(MOTION_BACKWARD);
@@ -81,6 +92,8 @@ void handleBackward()
 
 void handleLeft()
 {
+    updateCommandTimer();
+
     logInfo("[REMOTE] Left");
 
     executeMotion(MOTION_LEFT);
@@ -90,6 +103,8 @@ void handleLeft()
 
 void handleRight()
 {
+    updateCommandTimer();
+
     logInfo("[REMOTE] Right");
 
     executeMotion(MOTION_RIGHT);
@@ -99,6 +114,8 @@ void handleRight()
 
 void handleStop()
 {
+    updateCommandTimer();
+
     logInfo("[REMOTE] Stop");
 
     executeMotion(MOTION_STOP);
@@ -159,6 +176,13 @@ void handleNotFound()
     );
 }
 
+void updateCommandTimer()
+{
+    lastCommandTime = millis();
+
+    timeoutTriggered = false;
+}
+
 void setupRemoteControl()
 {
     if (!LittleFS.begin())
@@ -201,15 +225,35 @@ void setupRemoteControl()
     server.begin();
 
     logInfo("[REMOTE] HTTP Server Started");
+
+    lastCommandTime = millis();
 }
 
 void handleRemoteControl()
 {
     server.handleClient();
+
+    if (
+        !timeoutTriggered &&
+        millis() - lastCommandTime > COMMAND_TIMEOUT
+    )
+    {
+        logInfo(
+            "[SAFETY] Motion Timeout"
+        );
+
+        executeMotion(
+            MOTION_STOP
+        );
+
+        timeoutTriggered = true;
+    }
 }
 
 void handleJoystick()
 {
+    updateCommandTimer();
+
     if (!server.hasArg("x") || !server.hasArg("y"))
     {
         server.send(
@@ -242,6 +286,8 @@ void handleJoystick()
 
 void handleProfile()
 {
+    updateCommandTimer();
+
     if (!server.hasArg("mode"))
     {
         server.send(

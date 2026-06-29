@@ -5,6 +5,8 @@
 
 static uint8_t currentSpeed = 255;
 
+static float steeringRatio = 0.50f;
+
 static inline int16_t speed()
 {
     return (int16_t)currentSpeed;
@@ -55,25 +57,17 @@ void driveBackward()
 
 void driveLeft()
 {
-    /*
-     * Soft Left Turn
-     */
-
     setMotorOutput(
-        speed() / 2,
+        (int16_t)(speed() * steeringRatio),
         speed()
     );
 }
 
 void driveRight()
 {
-    /*
-     * Soft Right Turn
-     */
-
     setMotorOutput(
         speed(),
-        speed() / 2
+        (int16_t)(speed() * steeringRatio)
     );
 }
 
@@ -114,6 +108,38 @@ void driveJoystick(
     int16_t right
 )
 {
+    int16_t maxValue =
+        max(
+            abs(left),
+            abs(right)
+        );
+
+    if (maxValue > 255)
+    {
+        float scale =
+            255.0f / maxValue;
+
+        left =
+            left * scale;
+
+        right =
+            right * scale;
+    }
+
+    left =
+        constrain(
+            left,
+            -255,
+            255
+        );
+
+    right =
+        constrain(
+            right,
+            -255,
+            255
+        );
+
     setMotorOutput(
         left,
         right
