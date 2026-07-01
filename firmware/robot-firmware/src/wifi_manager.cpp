@@ -4,11 +4,15 @@
 #include "wifi_credentials.h"
 #include "logger.h"
 
+static unsigned long lastRetry = 0;
+
 bool connectWiFi()
 {
-    logInfo("[WIFI] connectWiFi() called");
+    logInfo("[WIFI] Starting");
 
     WiFi.mode(WIFI_STA);
+
+    WiFi.setSleep(false);
 
     WiFi.disconnect(true);
 
@@ -26,17 +30,14 @@ bool connectWiFi()
             KNOWN_WIFI_NETWORKS[i].password
         );
 
-        unsigned long startTime = millis();
+        unsigned long start = millis();
 
-        while (WiFi.status() != WL_CONNECTED &&
-               millis() - startTime < 10000)
+        while (
+            WiFi.status() != WL_CONNECTED &&
+            millis() - start < 10000
+        )
         {
-            delay(500);
-
-            logInfo(
-                "[WIFI] Status = " +
-                String(WiFi.status())
-            );
+            delay(250);
         }
 
         if (WiFi.status() == WL_CONNECTED)
@@ -53,30 +54,39 @@ bool connectWiFi()
                 WiFi.localIP().toString()
             );
 
-            logInfo(
-                "[WIFI] Gateway: " +
-                WiFi.gatewayIP().toString()
-            );
-
-            logInfo(
-                "[WIFI] Subnet: " +
-                WiFi.subnetMask().toString()
-            );
-
             return true;
         }
-
-        logInfo(
-            "[WIFI] Failed: " +
-            String(KNOWN_WIFI_NETWORKS[i].ssid)
-        );
 
         WiFi.disconnect(true);
 
         delay(500);
     }
 
-    logInfo("[WIFI] No Known Network Available");
+    logInfo("[WIFI] No Known Network");
 
     return false;
+}
+
+bool isWiFiConnected()
+{
+    return WiFi.status() == WL_CONNECTED;
+}
+
+void handleWiFi()
+{
+    if (WiFi.status() == WL_CONNECTED)
+    {
+        return;
+    }
+
+    if (millis() - lastRetry < 5000)
+    {
+        return;
+    }
+
+    lastRetry = millis();
+
+    logInfo("[WIFI] Reconnecting...");
+
+    WiFi.reconnect();
 }

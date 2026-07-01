@@ -1,50 +1,129 @@
-function send(command)
+/*
+ * ------------------------------------
+ * Aegis Remote Control
+ * ------------------------------------
+ */
+
+import { api } from "./api.js";
+
+import { initControls } from "./controls.js";
+import { initJoystick } from "./joystick.js";
+import { initSpeedController } from "./speed_controller.js";
+import { initModeSelector } from "./mode_selector.js";
+
+window.addEventListener(
+    "DOMContentLoaded",
+    () =>
+    {
+        console.log(
+            "[APP] Initializing..."
+        );
+
+        initControls();
+
+        initJoystick();
+
+        initSpeedController();
+
+        initModeSelector();
+
+        initEmergencyStop();
+
+        initConnectionMonitor();
+
+        console.log(
+            "[APP] Ready"
+        );
+    }
+);
+
+/*
+ * ------------------------------------
+ * Emergency Stop
+ * ------------------------------------
+ */
+
+function initEmergencyStop()
 {
-    fetch("/" + command);
-}
+    const button =
+        document.getElementById(
+            "emergencyStop"
+        );
 
-function bind(id, command)
-{
-    const button = document.getElementById(id);
+    if (!button)
+    {
+        console.error(
+            "[APP] Emergency Stop Missing"
+        );
 
-    button.addEventListener(
-        "mousedown",
-        () => send(command)
-    );
-
-    button.addEventListener(
-        "mouseup",
-        () => send("stop")
-    );
+        return;
+    }
 
     button.addEventListener(
-        "mouseleave",
-        () => send("stop")
-    );
-
-    button.addEventListener(
-        "touchstart",
-        (e) =>
+        "click",
+        async () =>
         {
-            e.preventDefault();
+            const ok =
+                await api(
+                    "/estop"
+                );
 
-            send(command);
+            if (!ok)
+            {
+                console.error(
+                    "[APP] Emergency Stop Failed"
+                );
+            }
         }
     );
-
-    button.addEventListener(
-        "touchend",
-        (e) =>
-        {
-            e.preventDefault();
-
-            send("stop");
-        }
-    );
 }
 
-bind("forward","forward");
-bind("backward","backward");
-bind("left","left");
-bind("right","right");
-bind("stop","stop");
+/*
+ * ------------------------------------
+ * Connection Status
+ * ------------------------------------
+ */
+
+function initConnectionMonitor()
+{
+    const status =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+    if (!status)
+    {
+        return;
+    }
+
+    function setConnected()
+    {
+        status.textContent =
+            "🟢 Connected";
+    }
+
+    function setDisconnected()
+    {
+        status.textContent =
+            "🔴 Disconnected";
+    }
+
+    window.addEventListener(
+        "online",
+        setConnected
+    );
+
+    window.addEventListener(
+        "offline",
+        setDisconnected
+    );
+
+    if (navigator.onLine)
+    {
+        setConnected();
+    }
+    else
+    {
+        setDisconnected();
+    }
+}

@@ -29,11 +29,14 @@ h1
     margin-bottom:10px;
 }
 
-.status
-{
-    color:#00ff88;
+.status{
 
-    margin-bottom:30px;
+    text-align:center;
+
+    font-weight:bold;
+
+    margin-bottom:20px;
+
 }
 
 .controls
@@ -80,4 +83,176 @@ button:active
     background:#2196f3;
 
     transform:scale(.95);
+}
+
+.card {
+
+    margin-top: 24px;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    background: #202020;
+}
+
+.card h2 {
+
+    margin-bottom: 15px;
+
+    text-align: center;
+}
+
+.speed-value {
+
+    text-align: center;
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+    margin-bottom: 15px;
+}
+
+#speedSlider {
+
+    width: 100%;
+
+    cursor: pointer;
+}
+
+.speed-presets {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.speed-presets button {
+
+    flex: 1;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+}
+
+#joystickBase {
+
+    position: relative;
+
+    width: 220px;
+
+    height: 220px;
+
+    margin: 25px auto;
+
+    border-radius: 50%;
+
+    border: 3px solid #555;
+
+    background: #2c2c2c;
+
+    touch-action: none;
+
+    user-select: none;
+}
+
+#joystickStick {
+
+    position: absolute;
+
+    width: 70px;
+
+    height: 70px;
+
+    left: 75px;
+
+    top: 75px;
+
+    border-radius: 50%;
+
+    background: #4caf50;
+
+    cursor: pointer;
+
+    transition: transform .05s linear;
+}
+
+.mode-selector{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:15px;
+}
+
+.mode{
+
+    flex:1;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    background:#2c2c2c;
+
+    color:white;
+}
+
+.mode.active{
+
+    background:#00c853;
+
+    color:black;
+
+    font-weight:bold;
+}
+
+.hidden{
+
+    display:none;
+}
+
+.emergency {
+
+    width:100%;
+
+    padding:16px;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    background:#d32f2f;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+}
+
+.emergency:hover {
+
+    background:#b71c1c;
+
 }
