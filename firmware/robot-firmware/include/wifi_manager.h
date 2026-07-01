@@ -3,4 +3,8 @@
 
 bool connectWiFi();
 
+bool isWiFiConnected();
+
+void handleWiFi();
+
 #endif

@@ -1,44 +1,130 @@
+import { apiFast } from "./api.js";
+
+/*
+ * ------------------------------------
+ * Button Controls
+ * ------------------------------------
+ */
+
 function send(command)
 {
-    fetch("/" + command);
+    api("/" + command);
 }
 
 function bind(id, command)
 {
-    const button = document.getElementById(id);
+    const button =
+        document.getElementById(id);
 
-    button.addEventListener("mousedown", () => send(command));
+    if (!button)
+    {
+        console.error(
+            "[CONTROLS] Missing button:",
+            id
+        );
 
-    button.addEventListener("mouseup", () => send("stop"));
+        return;
+    }
 
-    button.addEventListener("mouseleave", () => send("stop"));
+    /*
+     * Desktop
+     */
 
-    button.addEventListener("touchstart", (e) => {
+    button.addEventListener(
+        "mousedown",
+        () =>
+        {
+            send(command);
+        }
+    );
 
-        e.preventDefault();
+    button.addEventListener(
+        "mouseup",
+        () =>
+        {
+            send("stop");
+        }
+    );
 
-        send(command);
+    button.addEventListener(
+        "mouseleave",
+        () =>
+        {
+            send("stop");
+        }
+    );
 
-    });
+    /*
+     * Mobile
+     */
 
-    button.addEventListener("touchend", (e) => {
+    button.addEventListener(
+        "touchstart",
+        (event) =>
+        {
+            event.preventDefault();
 
-        e.preventDefault();
+            send(command);
+        },
+        {
+            passive: false
+        }
+    );
 
-        send("stop");
+    button.addEventListener(
+        "touchend",
+        (event) =>
+        {
+            event.preventDefault();
 
-    });
+            send("stop");
+        },
+        {
+            passive: false
+        }
+    );
+
+    /*
+     * Safety
+     */
+
+    button.addEventListener(
+        "touchcancel",
+        () =>
+        {
+            send("stop");
+        }
+    );
 }
 
 export function initControls()
 {
-    bind("forward","forward");
+    bind(
+        "forward",
+        "forward"
+    );
 
-    bind("backward","backward");
+    bind(
+        "backward",
+        "backward"
+    );
 
-    bind("left","left");
+    bind(
+        "left",
+        "left"
+    );
 
-    bind("right","right");
+    bind(
+        "right",
+        "right"
+    );
 
-    bind("stop","stop");
+    bind(
+        "stop",
+        "stop"
+    );
+
+    console.log(
+        "[CONTROLS] Ready"
+    );
 }

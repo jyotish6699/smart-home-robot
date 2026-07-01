@@ -1,3 +1,11 @@
+import { api } from "./api.js";
+
+/*
+ * ------------------------------------
+ * Motion Profiles
+ * ------------------------------------
+ */
+
 const PROFILE = {
 
     precision: {
@@ -29,47 +37,100 @@ const PROFILE = {
 export function initSpeedController()
 {
     const slider =
-        document.getElementById("speedSlider");
+        document.getElementById(
+            "speedSlider"
+        );
 
     const text =
-        document.getElementById("speedText");
+        document.getElementById(
+            "speedText"
+        );
 
-    async function setSpeed(value)
+    const precision =
+        document.getElementById(
+            "precision"
+        );
+
+    const normal =
+        document.getElementById(
+            "normal"
+        );
+
+    const sport =
+        document.getElementById(
+            "sport"
+        );
+
+    if (
+        !slider ||
+        !text ||
+        !precision ||
+        !normal ||
+        !sport
+    )
+    {
+        console.error(
+            "[SPEED] Missing Elements"
+        );
+
+        return;
+    }
+
+    function updateUI(value)
     {
         slider.value = value;
 
         text.textContent = value;
-
-        try
-        {
-            await fetch(
-                `/speed?value=${value}`
-            );
-        }
-        catch(err)
-        {
-            console.error(err);
-        }
     }
 
-    async function changeProfile(profile)
+    async function setSpeed(value)
     {
-        try
-        {
-            await fetch(
+        updateUI(value);
+
+        await api(
+            `/speed?value=${value}`
+        );
+    }
+
+    function setActiveButton(button)
+    {
+        [
+            precision,
+            normal,
+            sport
+        ].forEach(
+            (b) =>
+            {
+                b.classList.remove(
+                    "active"
+                );
+            }
+        );
+
+        button.classList.add(
+            "active"
+        );
+    }
+
+    async function changeProfile(profile, button)
+    {
+        const ok =
+            await api(
                 `/profile?mode=${profile.name}`
             );
 
-            slider.value =
-                profile.speed;
-
-            text.textContent =
-                profile.speed;
-        }
-        catch(err)
+        if (!ok)
         {
-            console.error(err);
+            return;
         }
+
+        updateUI(
+            profile.speed
+        );
+
+        setActiveButton(
+            button
+        );
     }
 
     slider.addEventListener(
@@ -82,39 +143,44 @@ export function initSpeedController()
         }
     );
 
-    document
-        .getElementById("precision")
-        .addEventListener(
-            "click",
-            () =>
-            {
-                changeProfile(
-                    PROFILE.precision
-                );
-            }
-        );
+    precision.addEventListener(
+        "click",
+        () =>
+        {
+            changeProfile(
+                PROFILE.precision,
+                precision
+            );
+        }
+    );
 
-    document
-        .getElementById("normal")
-        .addEventListener(
-            "click",
-            () =>
-            {
-                changeProfile(
-                    PROFILE.normal
-                );
-            }
-        );
+    normal.addEventListener(
+        "click",
+        () =>
+        {
+            changeProfile(
+                PROFILE.normal,
+                normal
+            );
+        }
+    );
 
-    document
-        .getElementById("sport")
-        .addEventListener(
-            "click",
-            () =>
-            {
-                changeProfile(
-                    PROFILE.sport
-                );
-            }
-        );
+    sport.addEventListener(
+        "click",
+        () =>
+        {
+            changeProfile(
+                PROFILE.sport,
+                sport
+            );
+        }
+    );
+
+    setActiveButton(
+        sport
+    );
+
+    console.log(
+        "[SPEED] Ready"
+    );
 }

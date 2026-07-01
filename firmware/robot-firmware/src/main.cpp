@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <ArduinoOTA.h>
+#include <WiFi.h>
 
 #include "wifi_manager.h"
 #include "ota_manager.h"
@@ -17,30 +18,19 @@ void setup()
 {
     Serial.begin(115200);
 
-    if (!connectWiFi())
-    {
-        logInfo("[SYSTEM] WiFi Connection Failed");
-
-        while (true)
-        {
-            delay(1000);
-        }
-    }
+    connectWiFi();
 
     initTelnetLogger();
 
     setupOTA();
 
-    if (!setupMDNS())
-    {
-        logInfo("[SYSTEM] mDNS Startup Failed");
-    }
+    setupMDNS();
 
     setupMotors();
 
-    setupMotionEngine();
-
     setupMotionProfile();
+
+    setupMotionEngine();
 
     setupRemoteControl();
 
@@ -49,6 +39,8 @@ void setup()
 
 void loop()
 {
+    handleWiFi();
+
     handleTelnetLogger();
 
     ArduinoOTA.handle();
